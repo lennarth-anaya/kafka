@@ -1,0 +1,38 @@
+{
+  "type" : "record",
+  "name" : "SomeInputRecord",
+  "namespace" : "org.lrth.kafkaavro.model.avro",
+  "fields" : [ {
+    "name" : "attONE",
+    "type" : "string"
+  }, {
+    "name" : "subsection",
+    "type" : {
+      "type" : "record",
+      "name" : "subsection",
+      "fields" : [ {
+            "name" : "attTWO",
+            "type" : "int"
+          }, {
+            "name": "initialTimeStamp",
+            "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+            }
+          }, {
+            "name": "nullableTimeStamp",
+            "type": [
+              "long",
+              "null"
+            ]
+          }, {
+            "name" : "favoriteFruits",
+            "type" : {
+              "type" : "array",
+              "items" : "string"
+            }
+          }
+      ]
+    }
+  } ]
+}

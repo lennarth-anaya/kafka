@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://dozer.sourceforge.net
+     http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+   <mapping stop-on-errors="false" map-id="inputOutput" >
+       <class-a>org.lrth.kafkaavro.model.avro.SomeInputRecord</class-a>
+       <class-b>org.lrth.kafkaavro.model.avro.SomeOutputRecord</class-b>
+       <field>
+           <!-- using reflection rather than custom getter/setter -->
+           <a is-accessible="true"
+           >attONE</a>
+           <b is-accessible="true"
+           >ATT_ONE</b>
+       </field>
+       <field>
+           <!-- using custom getter setter -->
+           <a>subsection.attTWO</a>
+           <b set-method="setATTTWO"
+              get-method="getATTTWO"
+           >ATT_TWO</b>
+       </field>
+       <field custom-converter-id="jodaTimePreserver" >
+           <!-- jodaTimePreserver to workaround Dozer losing JodaTimes -->
+           <a>subsection.initialTimeStamp</a>
+           <b set-method="setSTARTDATE"
+              get-method="getSTARTDATE"
+           >START_DATE</b>
+       </field>
+       <field custom-converter-id="timeStampConverter" >
+           <!-- timeStampConverter to parse TimeStamp to String -->
+           <a>subsection.nullableTimeStamp</a>
+           <b set-method="setNULLABLESTRDATE"
+              get-method="getNULLABLESTRDATE"
+           >NULLABLE_STR_DATE</b>
+       </field>
+       <field>
+           <!-- standard getters/setters, no fancy Dozer hints -->
+           <a>subsection.favoriteFruits</a>
+           <b>fruits</b>
+       </field>
+   </mapping>
+
+   <!--
+    Mapping two objects where one has a subset of the attributes of the other
+    one requires at least mapping dates due to prevent Dozer losing them.
+
+    we just have to map attributes that are named differently or at
+    a different level... and JodaTimes because Dozer uses current
+    date rather than source value
+    -->
+   <mapping stop-on-errors="false" map-id="outputToOutputPreservingDateTime" >
+       <class-a>org.lrth.kafkaavro.model.avro.SomeOutputRecord</class-a>
+       <class-b>org.lrth.kafkaavro.model.avro.SomeOutputWOFruitsRecord</class-b>
+
+       <field custom-converter-id="jodaTimePreserver" >
+           <a set-method="setSTARTDATE"
+              get-method="getSTARTDATE"
+           >START_DATE</a>
+           <b set-method="setSTARTDATE"
+              get-method="getSTARTDATE"
+           >START_DATE</b>
+       </field>
+   </mapping>
+
+</mappings>

@@ -1,0 +1,94 @@
+server.port: 7071
+
+my-configugration:
+  schema-registry: http://localhost:8091
+  kafka-brokers: localhost:9092
+  object-mapping-files:
+  - objmap/input-output-mapping.xml
+  dates:
+    string-format: "yyyy-MM-dd HH:mm:ss.SSSS Z"
+
+spring:
+  cloud:
+    stream:
+
+      schemaRegistryClient:
+        endpoint: ${my-configugration.schema-registry}
+
+      schema:
+        avro:
+          dynamic-schema-generation-enabled: false
+
+      bindings:
+        input:
+          destination: input-topic-kafka-client
+          contentType: application/*+avro
+          consumer:
+            maxAttempts: 1
+            useNativeEncoding: true
+            headerMode: raw
+          group: client-01
+        another-input:
+          destination: input-topic-web
+          contentType: application/*+avro
+          consumer:
+            maxAttempts: 1
+            useNativeEncoding: true
+            headerMode: raw
+          group: client-01
+
+        output:
+          destination: output-topic-main
+          contentType: application/*+avro
+          producer:
+            useNativeEncoding: true
+            headerMode: raw
+        without-fruits-output:
+          destination: output-topic-fruits-att-excluded
+          contentType: application/*+avro
+          producer:
+            useNativeEncoding: true
+            headerMode: raw
+        null-date-output:
+          destination: output-topic-null
+          contentType: application/*+avro
+          producer:
+            useNativeEncoding: true
+            headerMode: raw
+
+      kafka:
+        binder:
+          brokers: ${my-configugration.kafka-brokers}
+          autoAddPartitions: true
+        bindings:
+          input:
+            consumer:
+              configuration:
+                schema.registry.url: ${my-configugration.schema-registry}
+          another-input:
+            consumer:
+              configuration:
+                schema.registry.url: ${my-configugration.schema-registry}
+          output:
+            producer:
+              configuration:
+                schema.registry.url: ${my-configugration.schema-registry}
+          without-fruits-output:
+            producer:
+              configuration:
+                schema.registry.url: ${my-configugration.schema-registry}
+          null-date-output:
+            producer:
+              configuration:
+                schema.registry.url: ${my-configugration.schema-registry}
+
+  kafka:
+    consumer:
+      # value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      value-deserializer: io.confluent.kafka.streams.serdes.avro.SpecificAvroDeserializer
+    producer:
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+
+logging:
+  level:
+    org.lrth.kafkaavro: DEBUG

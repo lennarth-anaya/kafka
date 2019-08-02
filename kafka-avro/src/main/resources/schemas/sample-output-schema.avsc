@@ -1,0 +1,35 @@
+{
+  "type" : "record",
+  "name" : "SomeOutputRecord",
+  "namespace" : "org.lrth.kafkaavro.model.avro",
+  "fields" : [
+      {
+        "name" : "ATT_ONE",
+        "type" : "string"
+      }, {
+        "name" : "ATT_TWO",
+        "type" : "int"
+      }, {
+        "name": "START_DATE",
+        "type": {
+            "type": "long",
+            "logicalType": "timestamp-millis"
+        }
+      }, {
+        "name": "NULLABLE_STR_DATE",
+        "type": [
+            {
+                "type": "string"
+            },
+            "null"
+        ],
+        "default": null
+      }, {
+        "name" : "fruits",
+        "type" : {
+          "type" : "array",
+          "items" : "string"
+        }
+      }
+  ]
+}
