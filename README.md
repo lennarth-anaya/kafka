@@ -15,6 +15,10 @@ sudo docker run -e ADV_HOST=localhost \
 
 Remove debug-jvm flag if you don't have an IDE to debug it.
 
+```
+cd kafka-avro
+```
+
 Linux
 ```
 ./gradlew clean build
